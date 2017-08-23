@@ -37,11 +37,11 @@
                 android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/txtUsuario"
+                android:id="@+id/txtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/nombre_usuario"
-                android:inputType="textPersonName" />
+                android:hint="@string/correo_electronico"
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/txtPassword"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/registrar"
                 android:textColor="@color/blanco"
-                android:textStyle="bold|italic"
+                android:textStyle="bold"
                 android:background="@color/colorPrimaryDark"/>
 
         </LinearLayout>
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:clickable="true"
-        android:textStyle="bold"
+        android:textStyle="bold|italic"
         android:textSize="18sp"
         android:textColor="@color/rojo"
         android:text="@string/tienes_usuario" />
