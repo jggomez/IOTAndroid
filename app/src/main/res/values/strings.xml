@@ -9,4 +9,8 @@
     <string name="nombres_apellidos">Nombres y Apellidos</string>
     <string name="tienes_usuario">Ya tienes un usuario</string>
     <string name="correo_electronico">Correo Electronico</string>
+    <string name="sala">Sala</string>
+    <string name="Habitacion">Habitación</string>
+    <string name="cocina">Cocina</string>
+    <string name="bano">Baño</string>
 </resources>

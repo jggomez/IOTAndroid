@@ -1,9 +1,9 @@
 package co.edu.ucc.iotandroid;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,10 +12,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.edu.ucc.iotandroid.entidades.Usuario;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -33,6 +37,10 @@ public class RegistroActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
+    private FirebaseDatabase database;
+
+    private DatabaseReference reference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,35 +49,81 @@ public class RegistroActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference("usuarios");
+    }
+
+    @OnClick(R.id.btnLogin)
+    public void clickLogin() {
+        finish();
     }
 
     @OnClick(R.id.btnRegistrar)
-    public void clickRegistrar(){
+    public void clickRegistrar() {
 
         String nombres = txtNombres.getText().toString();
         String email = txtEmail.getText().toString();
         String password = txtPassword.getText().toString();
 
-        btnRegistrar.setEnabled(false);
-
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Intent intent = new Intent(RegistroActivity.this,
-                                    ControlActivity.class);
+                        if (task.isSuccessful()) {
 
-                            startActivity(intent);
+                            final String uid = task.getResult().getUser().getUid();
 
-                            finish();
+                            task.getResult().getUser().getToken(true)
+                                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
 
-                            return;
+                                            if (task.isSuccessful()) {
+
+                                                final String nomUsuario = txtNombres.getText().toString();
+
+                                                Usuario objUsuario = new Usuario();
+                                                objUsuario.setNombres(nomUsuario);
+                                                objUsuario.setToken(task.getResult().getToken());
+
+                                                reference.child(uid).setValue(objUsuario)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+
+                                                                    Intent intent = new Intent(RegistroActivity.this,
+                                                                            ControlActivity.class);
+
+                                                                    intent.putExtra("nomUsuario", nomUsuario);
+
+                                                                    startActivity(intent);
+
+                                                                    finish();
+                                                                } else {
+                                                                    Toast.makeText(RegistroActivity.this,
+                                                                            "Error " + task.getException().getMessage(),
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        });
+
+                                            } else {
+
+                                                Toast.makeText(RegistroActivity.this,
+                                                        "Error " + task.getException().getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
+
+                        } else {
+
+                            Toast.makeText(RegistroActivity.this,
+                                    "Error " + task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
-
-                        Toast.makeText(RegistroActivity.this,
-                                "Error "+ task.getException().getMessage(),
-                                Toast.LENGTH_SHORT).show();
                     }
                 });
 

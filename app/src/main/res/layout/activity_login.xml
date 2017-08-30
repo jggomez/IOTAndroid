@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="co.edu.ucc.iotandroid.loginActivity">
+    tools:context="co.edu.ucc.iotandroid.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="0.4"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/iot" />
 
 
         <LinearLayout
@@ -49,7 +49,10 @@
                 android:id="@+id/btnIngresar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ingresar" />
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/ingresar"
+                android:textColor="@color/blanco"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -57,11 +60,15 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnRegistrar"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/registrar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:text="@string/registrar" />
+        android:clickable="true"
+        android:text="@string/registrar"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:textStyle="bold|italic" />
 
 </FrameLayout>
