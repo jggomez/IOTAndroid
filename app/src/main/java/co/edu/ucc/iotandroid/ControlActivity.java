@@ -7,12 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.edu.ucc.iotandroid.entidades.Hogar;
 
 public class ControlActivity extends AppCompatActivity {
 
@@ -23,6 +27,15 @@ public class ControlActivity extends AppCompatActivity {
 
     @BindView(R.id.btnSala)
     Button btnSala;
+
+    @BindView(R.id.btnHabitacion)
+    Button btnHabitacion;
+
+    @BindView(R.id.btnBano)
+    Button btnBano;
+
+    @BindView(R.id.btnCocina)
+    Button btnCocina;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -44,6 +57,37 @@ public class ControlActivity extends AppCompatActivity {
 
         databaseReference = database.getReference("hogar");
 
+        loadData();
+
+    }
+
+    private void loadData() {
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Hogar hogar = dataSnapshot.getValue(Hogar.class);
+
+                setEstadoBoton(btnBano, hogar.getBano());
+                setEstadoBoton(btnCocina, hogar.getCocina());
+                setEstadoBoton(btnHabitacion, hogar.getHabitacion());
+                setEstadoBoton(btnSala, hogar.getSala());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setEstadoBoton(Button boton, int estado) {
+        if (estado == 1) {
+            boton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        } else {
+            boton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
+        }
     }
 
     enum lugaresEnum {
