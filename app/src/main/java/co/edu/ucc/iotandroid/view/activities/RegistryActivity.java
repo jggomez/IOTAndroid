@@ -43,7 +43,7 @@ public class RegistryActivity extends AppCompatActivity implements IRegistryView
 
         ButterKnife.bind(this);
 
-        registryPresenter = new RegistryPresenter(this);
+        registryPresenter = new RegistryPresenter(this, getApplicationContext());
         registryPresenter.initialize();
     }
 
