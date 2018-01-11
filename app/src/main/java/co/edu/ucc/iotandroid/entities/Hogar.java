@@ -1,4 +1,4 @@
-package co.edu.ucc.iotandroid.entidades;
+package co.edu.ucc.iotandroid.entities;
 
 /**
  * Created by jggomez on 05-Sep-17.

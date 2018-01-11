@@ -1,16 +1,18 @@
 <resources>
     <string name="app_name">IOTandroid</string>
-    <string name="nombre_usuario">Usuario</string>
-    <string name="password">Contraseña</string>
-    <string name="ingresar">Ingresar</string>
-    <string name="registrar">Registrar</string>
+    <string name="nombre_usuario">Email</string>
+    <string name="password">Password</string>
+    <string name="ingresar">Log in</string>
+    <string name="registrar">Sign up</string>
     <string name="ingreso">Click en Ingresar</string>
     <string name="title_activity_maps">Map</string>
-    <string name="nombres_apellidos">Nombres y Apellidos</string>
-    <string name="tienes_usuario">Ya tienes un usuario</string>
-    <string name="correo_electronico">Correo Electronico</string>
-    <string name="sala">Sala</string>
-    <string name="Habitacion">Habitación</string>
-    <string name="cocina">Cocina</string>
-    <string name="bano">Baño</string>
+    <string name="nombres_apellidos">Names</string>
+    <string name="tienes_usuario">Log in</string>
+    <string name="correo_electronico">Email</string>
+    <string name="sala">Living Room</string>
+    <string name="Habitacion">Room</string>
+    <string name="cocina">kitchen</string>
+    <string name="bano">Bathroom</string>
+    <string name="mensajeRegistro">Por favor comuniquese con servicio al cliente para que sea asignado a un hogar</string>
+    <string name="emailVerified">Please, you must verify your account</string>
 </resources>

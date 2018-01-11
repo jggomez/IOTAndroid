@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:rowCount="2"
-    tools:context="co.edu.ucc.iotandroid.ControlActivity">
+    tools:context="co.edu.ucc.iotandroid.view.activities.ControlActivity">
 
 
     <Button

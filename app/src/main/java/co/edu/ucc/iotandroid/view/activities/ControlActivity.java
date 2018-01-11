@@ -1,12 +1,13 @@
-package co.edu.ucc.iotandroid;
+package co.edu.ucc.iotandroid.view.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,7 +17,9 @@ import com.google.firebase.database.ValueEventListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import co.edu.ucc.iotandroid.entidades.Hogar;
+import co.edu.ucc.iotandroid.R;
+import co.edu.ucc.iotandroid.entities.Hogar;
+import co.edu.ucc.iotandroid.utils.Analytics;
 
 public class ControlActivity extends AppCompatActivity {
 
@@ -24,6 +27,7 @@ public class ControlActivity extends AppCompatActivity {
     private static int estadoCocina = 0;
     private static int estadoBano = 0;
     private static int estadoHabitacion = 0;
+    private Analytics analytics;
 
     @BindView(R.id.btnSala)
     Button btnSala;
@@ -47,15 +51,19 @@ public class ControlActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        String nomUsuario = getIntent().getStringExtra("nomUsuario");
+        analytics = Analytics.getInstance(getApplicationContext());
 
-        Log.i("ControlActivity", nomUsuario);
+        SharedPreferences preferences = getSharedPreferences("user", MODE_PRIVATE);
+        String username = preferences.getString("userName", "");
 
-        setTitle("Bienvenido " + nomUsuario);
+        setTitle("Bienvenido " + username);
 
         database = FirebaseDatabase.getInstance();
 
-        databaseReference = database.getReference("hogar");
+        preferences = getSharedPreferences("home", MODE_PRIVATE);
+        String homeId = preferences.getString("homeId", "");
+
+        databaseReference = database.getReference("hogares").child(homeId);
 
         loadData();
 
@@ -97,12 +105,19 @@ public class ControlActivity extends AppCompatActivity {
         BANO
     }
 
+    private void logAnalytic(String place){
+        Bundle data = new Bundle();
+        data.putString(FirebaseAnalytics.Param.ITEM_NAME, place);
+        analytics.log(data, FirebaseAnalytics.Event.VIEW_ITEM);
+    }
+
     @OnClick(R.id.btnSala)
     public void clickSala(View view) {
 
         if (estadoSala == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoSala = 1;
+            logAnalytic(lugaresEnum.SALA.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoSala = 0;
@@ -117,6 +132,7 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoCocina == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoCocina = 1;
+            logAnalytic(lugaresEnum.COCINA.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoCocina = 0;
@@ -131,6 +147,7 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoBano == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoBano = 1;
+            logAnalytic(lugaresEnum.BANO.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoBano = 0;
@@ -145,6 +162,7 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoHabitacion == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoHabitacion = 1;
+            logAnalytic(lugaresEnum.HABITACION.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoHabitacion = 0;
