@@ -1,13 +1,17 @@
 package co.edu.ucc.iotandroid.view.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +47,7 @@ public class ControlActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +64,36 @@ public class ControlActivity extends AppCompatActivity {
         setTitle("Bienvenido " + username);
 
         database = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         preferences = getSharedPreferences("home", MODE_PRIVATE);
         String homeId = preferences.getString("homeId", "");
 
-        databaseReference = database.getReference("hogares").child(homeId);
+        databaseReference = database.getReference("home").child(homeId);
 
         loadData();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.signOut) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            firebaseAuth.signOut();
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -99,13 +127,13 @@ public class ControlActivity extends AppCompatActivity {
     }
 
     enum lugaresEnum {
-        SALA,
-        COCINA,
-        HABITACION,
-        BANO
+        LIVING,
+        KITCHEN,
+        ROOM,
+        BATHROOM
     }
 
-    private void logAnalytic(String place){
+    private void logAnalytic(String place) {
         Bundle data = new Bundle();
         data.putString(FirebaseAnalytics.Param.ITEM_NAME, place);
         analytics.log(data, FirebaseAnalytics.Event.VIEW_ITEM);
@@ -117,13 +145,13 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoSala == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoSala = 1;
-            logAnalytic(lugaresEnum.SALA.name());
+            logAnalytic(lugaresEnum.LIVING.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoSala = 0;
         }
 
-        actualizarData(lugaresEnum.SALA, estadoSala);
+        actualizarData(lugaresEnum.LIVING, estadoSala);
     }
 
     @OnClick(R.id.btnCocina)
@@ -132,13 +160,13 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoCocina == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoCocina = 1;
-            logAnalytic(lugaresEnum.COCINA.name());
+            logAnalytic(lugaresEnum.KITCHEN.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoCocina = 0;
         }
 
-        actualizarData(lugaresEnum.COCINA, estadoCocina);
+        actualizarData(lugaresEnum.KITCHEN, estadoCocina);
     }
 
     @OnClick(R.id.btnBano)
@@ -147,13 +175,13 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoBano == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoBano = 1;
-            logAnalytic(lugaresEnum.BANO.name());
+            logAnalytic(lugaresEnum.BATHROOM.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoBano = 0;
         }
 
-        actualizarData(lugaresEnum.BANO, estadoBano);
+        actualizarData(lugaresEnum.BATHROOM, estadoBano);
     }
 
     @OnClick(R.id.btnHabitacion)
@@ -162,13 +190,13 @@ public class ControlActivity extends AppCompatActivity {
         if (estadoHabitacion == 0) {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             estadoHabitacion = 1;
-            logAnalytic(lugaresEnum.HABITACION.name());
+            logAnalytic(lugaresEnum.ROOM.name());
         } else {
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
             estadoHabitacion = 0;
         }
 
-        actualizarData(lugaresEnum.HABITACION, estadoHabitacion);
+        actualizarData(lugaresEnum.ROOM, estadoHabitacion);
     }
 
     private void actualizarData(lugaresEnum lugares, int data) {

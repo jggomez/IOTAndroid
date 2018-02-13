@@ -15,4 +15,5 @@
     <string name="bano">Bathroom</string>
     <string name="mensajeRegistro">Por favor comuniquese con servicio al cliente para que sea asignado a un hogar</string>
     <string name="emailVerified">Please, you must verify your account</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
